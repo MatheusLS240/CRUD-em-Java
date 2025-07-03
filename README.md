@@ -8,9 +8,7 @@ Este projeto consiste em um sistema básico de CRUD (Create, Read, Update, Delet
 
 ## Novo Design
 
-O novo layout da interface foi criado pelo meu amigo **[Pietro Amadeu](https://github.com/Pietrolazz)**, com prototipação feita no Figma:
-
-🔗 [Protótipo no Figma – Lista de Compras](https://www.figma.com/design/22bO2dm5Xb7qD3GovCNvHr/Lista-de-compras---Matheus?node-id=0-1&p=f)
+O novo layout da interface foi criado pelo meu amigo **[Pietro Amadeu](https://github.com/Pietrolazz)**, com prototipação feita no Figma: [Protótipo no Figma – Lista de Compras](https://www.figma.com/design/22bO2dm5Xb7qD3GovCNvHr/Lista-de-compras---Matheus?node-id=0-1&p=f)
 
 A implementação em Java com Swing foi feita por mim, transformando o design em código funcional.
 
