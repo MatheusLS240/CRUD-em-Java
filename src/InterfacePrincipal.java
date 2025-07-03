@@ -9,6 +9,7 @@ public class InterfacePrincipal {
         JPanel campoUsuario = new JPanel();
         JPanel resultados = new JPanel();
         JScrollPane scrollPane = new JScrollPane(resultados);
+
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
@@ -25,7 +26,7 @@ public class InterfacePrincipal {
         painelPrincipal.setVisible(true);
     }
 
-    // Função para configurar o painel principal da interface, definindo título, tamanho, localização e layout
+    // Configura o painel principal da interface
     private static void configPainelPrincipal(JFrame painelPrincipal) {
         painelPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         painelPrincipal.setSize(500, 500);
@@ -35,7 +36,7 @@ public class InterfacePrincipal {
         System.out.println("\nPainel principal configurado com sucesso!");
     }
 
-    // Função para configurar o painel de título, onde será exibida uma mensagem de boas-vindas
+    // Configura o painel de título
     private static void configTitlePanel(JPanel title) {
         JLabel titleLabel = new JLabel("Lista de Tarefas");
         titleLabel.setFont(fontPersonalizada(24f));
@@ -45,46 +46,100 @@ public class InterfacePrincipal {
         System.out.println("Painel de título configurado com sucesso!");
     }
 
-    // Função para configurar o painel de campos do usuário, onde o usuário pode inserir as tarefas
+    // Configura o painel de campos do usuário
     private static void configcampoUsuarioPanel(JPanel campoUsuario, JPanel resultados) {
         JTextField campoTexto = new JTextField();
-        JButton botaoAdicionar = new JButton("+");
+        JButton botaoAdicionar = new JButton(new ImageIcon("icons\\add-icon.png"));
 
-        campoTexto.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 2), 
-        BorderFactory.createEmptyBorder(0, 8, 0, 8)));
+        campoTexto.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.BLACK, 2),
+            BorderFactory.createEmptyBorder(0, 8, 0, 8)
+        ));
         campoTexto.setMaximumSize(new Dimension(410, 48));
 
         botaoAdicionar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        botaoAdicionar.setFont(new Font("SansSerif", Font.PLAIN, 32));
         botaoAdicionar.setForeground(Color.BLACK);
-        botaoAdicionar.setMaximumSize(new Dimension(53, 48));
         botaoAdicionar.setBackground(Color.WHITE);
+        botaoAdicionar.setMaximumSize(new Dimension(53, 48));
         botaoAdicionar.setFocusPainted(false);
+
         botaoAdicionar.addActionListener((actionEvent) -> {
             String texto = campoTexto.getText();
             if (!texto.isEmpty()) {
+                JButton excluirBotao = new JButton(new ImageIcon("icons\\delete-icon.png"));
+                JButton editarBotao = new JButton(new ImageIcon("icons\\edit-icon.png"));
+                JPanel itemPanel = new JPanel();
                 JLabel itemAdicionado = new JLabel(texto);
+
+                excluirBotao.setBackground(Color.WHITE);
+                excluirBotao.setBorder(BorderFactory.createEmptyBorder());
+
+                editarBotao.setBackground(Color.WHITE);
+                editarBotao.setBorder(BorderFactory.createEmptyBorder());
+
+                itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
+                itemPanel.setMaximumSize(new Dimension(500, 50));
+                itemPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+                itemPanel.setBorder(BorderFactory.createEmptyBorder(12, 0, 12, 0));
+
+                itemPanel.add(itemAdicionado);
+                itemPanel.add(Box.createHorizontalGlue());
+                itemPanel.add(excluirBotao);
+                itemPanel.add(editarBotao, Component.RIGHT_ALIGNMENT);
+
                 itemAdicionado.setFont(fontPersonalizada(16f));
                 itemAdicionado.setForeground(Color.BLACK);
-                itemAdicionado.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
-                resultados.add(Box.createRigidArea(new Dimension(0, 24)));
-                resultados.add(itemAdicionado);
+
+                campoTexto.setText("");
+
+                resultados.add(itemPanel);
+                resultados.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
                 resultados.revalidate();
                 resultados.repaint();
-                campoTexto.setText("");
+
+                excluirBotao.addActionListener(e -> {
+                    int resposta = JOptionPane.showConfirmDialog(
+                        campoUsuario,
+                        "Você tem certeza que deseja excluir este item? (" + itemAdicionado.getText() + ")",
+                        "Confirmação de Exclusão",
+                        JOptionPane.YES_NO_OPTION
+                    );
+                    if (resposta == JOptionPane.YES_OPTION) {
+                        resultados.remove(itemPanel);
+                        resultados.revalidate();
+                        resultados.repaint();
+                    }
+                });
+
+                editarBotao.addActionListener(e -> {
+                    String novoTexto = JOptionPane.showInputDialog(
+                        campoUsuario,
+                        "Editar item:",
+                        itemAdicionado.getText()
+                    );
+                    if (novoTexto != null && !novoTexto.trim().isEmpty()) {
+                        itemAdicionado.setText(novoTexto);
+                    }
+                });
+
             } else {
-                JOptionPane.showMessageDialog(campoUsuario, "Por favor, insira um item.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(
+                    campoUsuario,
+                    "Por favor, insira um item.",
+                    "Aviso",
+                    JOptionPane.WARNING_MESSAGE
+                );
             }
         });
 
         campoUsuario.add(campoTexto);
-        campoUsuario.add(Box.createRigidArea(new Dimension(12, 0))); // 12px de espaço horizontal
+        campoUsuario.add(Box.createRigidArea(new Dimension(12, 0))); // Espaço horizontal
         campoUsuario.add(botaoAdicionar);
         campoUsuario.setBorder(BorderFactory.createEmptyBorder(0, 8, 30, 8));
         System.out.println("Painel de campos do usuário configurado com sucesso!");
     }
 
-    // Função para configurar o painel de resultados para exibir as tarefas adicionadas pelo usuário
+    // Configura o painel de resultados
     private static void configResultadosPanel(JPanel resultados, JScrollPane scrollPane) {
         JSeparator linha = new JSeparator(SwingConstants.HORIZONTAL);
         JLabel mensagemResultado = new JLabel("Seus itens adicionados: ");
@@ -98,25 +153,25 @@ public class InterfacePrincipal {
         resultados.add(linha);
         resultados.add(Box.createRigidArea(new Dimension(0, 24)));
         resultados.add(mensagemResultado);
+        resultados.add(Box.createRigidArea(new Dimension(0, 12)));
         resultados.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
-        
-        scrollPane.setPreferredSize(new Dimension(500, 300));
 
+        scrollPane.setPreferredSize(new Dimension(500, 300));
         System.out.println("Painel de resultados configurado com sucesso!");
     }
 
-    // Função para configurar as propriedades gerais dos painéis, como layout e alinhamento
+    // Configura os layouts dos painéis
     private static void configGeralPanels(JPanel title, JPanel campoUsuario, JPanel resultados) {
-        title.setLayout(new BoxLayout(title, 0));
+        title.setLayout(new BoxLayout(title, BoxLayout.X_AXIS));
         campoUsuario.setLayout(new BoxLayout(campoUsuario, BoxLayout.X_AXIS));
         resultados.setLayout(new BoxLayout(resultados, BoxLayout.Y_AXIS));
         System.out.println("Configurações gerais dos painéis aplicadas com sucesso!");
     }
 
-    // Função para carregar uma fonte personalizada, caso não seja possível, retorna uma fonte padrão
+    // Carrega uma fonte personalizada, ou retorna uma padrão se não conseguir
     private static Font fontPersonalizada(float tamanho) {
         try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new File("font/kantumruy-pro-latin-700-normal.ttf"));
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new File("font\\static\\KantumruyPro-Bold.ttf"));
             return font.deriveFont(Font.BOLD, tamanho);
         } catch (FontFormatException | IOException e) {
             System.out.println("Erro ao carregar a fonte personalizada: " + e.getMessage());
