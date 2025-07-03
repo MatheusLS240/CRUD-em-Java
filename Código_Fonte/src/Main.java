@@ -2,7 +2,7 @@ import java.awt.*;
 import java.io.*;
 import javax.swing.*;
 
-public class InterfacePrincipal {
+public class Main {
     public static void main(String[] args) {
         JFrame painelPrincipal = new JFrame("CRUD - Java");
         JPanel title = new JPanel();
@@ -64,72 +64,7 @@ public class InterfacePrincipal {
         botaoAdicionar.setFocusPainted(false);
 
         botaoAdicionar.addActionListener((actionEvent) -> {
-            String texto = campoTexto.getText();
-            if (!texto.isEmpty()) {
-                JButton excluirBotao = new JButton(new ImageIcon("icons\\delete-icon.png"));
-                JButton editarBotao = new JButton(new ImageIcon("icons\\edit-icon.png"));
-                JPanel itemPanel = new JPanel();
-                JLabel itemAdicionado = new JLabel(texto);
-
-                excluirBotao.setBackground(Color.WHITE);
-                excluirBotao.setBorder(BorderFactory.createEmptyBorder());
-
-                editarBotao.setBackground(Color.WHITE);
-                editarBotao.setBorder(BorderFactory.createEmptyBorder());
-
-                itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
-                itemPanel.setMaximumSize(new Dimension(500, 50));
-                itemPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-                itemPanel.setBorder(BorderFactory.createEmptyBorder(12, 0, 12, 0));
-
-                itemPanel.add(itemAdicionado);
-                itemPanel.add(Box.createHorizontalGlue());
-                itemPanel.add(excluirBotao);
-                itemPanel.add(editarBotao, Component.RIGHT_ALIGNMENT);
-
-                itemAdicionado.setFont(fontPersonalizada(16f));
-                itemAdicionado.setForeground(Color.BLACK);
-
-                campoTexto.setText("");
-
-                resultados.add(itemPanel);
-                resultados.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
-                resultados.revalidate();
-                resultados.repaint();
-
-                excluirBotao.addActionListener(e -> {
-                    int resposta = JOptionPane.showConfirmDialog(
-                        campoUsuario,
-                        "Você tem certeza que deseja excluir este item? (" + itemAdicionado.getText() + ")",
-                        "Confirmação de Exclusão",
-                        JOptionPane.YES_NO_OPTION
-                    );
-                    if (resposta == JOptionPane.YES_OPTION) {
-                        resultados.remove(itemPanel);
-                        resultados.revalidate();
-                        resultados.repaint();
-                    }
-                });
-
-                editarBotao.addActionListener(e -> {
-                    String novoTexto = JOptionPane.showInputDialog(
-                        campoUsuario,
-                        "Editar item:",
-                        itemAdicionado.getText()
-                    );
-                    if (novoTexto != null && !novoTexto.trim().isEmpty()) {
-                        itemAdicionado.setText(novoTexto);
-                    }
-                });
-
-            } else {
-                JOptionPane.showMessageDialog(
-                    campoUsuario,
-                    "Por favor, insira um item.",
-                    "Aviso",
-                    JOptionPane.WARNING_MESSAGE
-                );
-            }
+            funcaoBotaoAdicionar(campoUsuario, resultados, campoTexto);
         });
 
         campoUsuario.add(campoTexto);
@@ -166,6 +101,85 @@ public class InterfacePrincipal {
         campoUsuario.setLayout(new BoxLayout(campoUsuario, BoxLayout.X_AXIS));
         resultados.setLayout(new BoxLayout(resultados, BoxLayout.Y_AXIS));
         System.out.println("Configurações gerais dos painéis aplicadas com sucesso!");
+    }
+
+    private static void funcaoBotaoAdicionar(JPanel campoUsuario, JPanel resultados, JTextField campoTexto) {
+            String texto = campoTexto.getText();
+            if (!texto.isEmpty()) {
+                JButton excluirBotao = new JButton(new ImageIcon("icons\\delete-icon.png"));
+                JButton editarBotao = new JButton(new ImageIcon("icons\\edit-icon.png"));
+                JPanel itemPanel = new JPanel();
+                JLabel itemAdicionado = new JLabel(texto);
+
+                excluirBotao.setBackground(Color.WHITE);
+                excluirBotao.setBorder(BorderFactory.createEmptyBorder());
+
+                editarBotao.setBackground(Color.WHITE);
+                editarBotao.setBorder(BorderFactory.createEmptyBorder());
+
+                itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
+                itemPanel.setMaximumSize(new Dimension(500, 50));
+                itemPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+                itemPanel.setBorder(BorderFactory.createEmptyBorder(12, 0, 12, 0));
+
+                itemPanel.add(itemAdicionado);
+                itemPanel.add(Box.createHorizontalGlue());
+                itemPanel.add(excluirBotao);
+                itemPanel.add(editarBotao, Component.RIGHT_ALIGNMENT);
+
+                itemAdicionado.setFont(fontPersonalizada(16f));
+                itemAdicionado.setForeground(Color.BLACK);
+
+                campoTexto.setText("");
+
+                resultados.add(itemPanel);
+                resultados.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
+                resultados.revalidate();
+                resultados.repaint();
+
+                excluirBotao.addActionListener(e -> {
+                    funcaoBotaoRemover(campoUsuario, resultados, itemPanel, itemAdicionado);
+                });
+
+                editarBotao.addActionListener(e -> {
+                    funcaoBotaoEditar(campoUsuario, itemAdicionado);
+                });
+
+            } else {
+                JOptionPane.showMessageDialog(
+                    campoUsuario,
+                    "Por favor, insira um item.",
+                    "Aviso",
+                    JOptionPane.WARNING_MESSAGE
+                );
+            }
+    }
+
+    // Função do botão de remover
+    private static void funcaoBotaoRemover(JPanel campoUsuario, JPanel resultados, JPanel itemPanel, JLabel itemAdicionado) {
+        int resposta = JOptionPane.showConfirmDialog(
+            campoUsuario,
+            "Você tem certeza que deseja excluir este item? (" + itemAdicionado.getText() + ")",
+            "Confirmação de Exclusão",
+            JOptionPane.YES_NO_OPTION
+        );
+        if (resposta == JOptionPane.YES_OPTION) {
+            resultados.remove(itemPanel);
+            resultados.revalidate();
+            resultados.repaint();
+        }
+    }
+
+    // Função do botão de editar
+    private static void funcaoBotaoEditar(JPanel campoUsuario, JLabel itemAdicionado) {
+        String novoTexto = JOptionPane.showInputDialog(
+            campoUsuario,
+            "Editar item:",
+            itemAdicionado.getText()
+        );
+        if (novoTexto != null && !novoTexto.trim().isEmpty()) {
+            itemAdicionado.setText(novoTexto);
+        }
     }
 
     // Carrega uma fonte personalizada, ou retorna uma padrão se não conseguir
