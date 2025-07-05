@@ -49,7 +49,7 @@ public class Main {
     // Configura o painel de campos do usuário
     private static void configcampoUsuarioPanel(JPanel campoUsuario, JPanel resultados) {
         JTextField campoTexto = new JTextField();
-        JButton botaoAdicionar = new JButton(new ImageIcon("icons\\add-icon.png"));
+        JButton botaoAdicionar = new JButton(new ImageIcon(Main.class.getClassLoader().getResource("icons/add-icon.png")));
 
         campoTexto.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.BLACK, 2),
@@ -103,11 +103,12 @@ public class Main {
         System.out.println("Configurações gerais dos painéis aplicadas com sucesso!");
     }
 
+    // Função para configurar o botão de adicionar
     private static void funcaoBotaoAdicionar(JPanel campoUsuario, JPanel resultados, JTextField campoTexto) {
             String texto = campoTexto.getText();
             if (!texto.isEmpty()) {
-                JButton excluirBotao = new JButton(new ImageIcon("icons\\delete-icon.png"));
-                JButton editarBotao = new JButton(new ImageIcon("icons\\edit-icon.png"));
+                JButton editarBotao = new JButton(new ImageIcon(Main.class.getClassLoader().getResource("icons/edit-icon.png")));
+                JButton excluirBotao = new JButton(new ImageIcon(Main.class.getClassLoader().getResource("icons/delete-icon.png")));
                 JPanel itemPanel = new JPanel();
                 JLabel itemAdicionado = new JLabel(texto);
 
@@ -124,8 +125,8 @@ public class Main {
 
                 itemPanel.add(itemAdicionado);
                 itemPanel.add(Box.createHorizontalGlue());
-                itemPanel.add(excluirBotao);
                 itemPanel.add(editarBotao, Component.RIGHT_ALIGNMENT);
+                itemPanel.add(excluirBotao);
 
                 itemAdicionado.setFont(fontPersonalizada(16f));
                 itemAdicionado.setForeground(Color.BLACK);
@@ -153,6 +154,11 @@ public class Main {
                     JOptionPane.WARNING_MESSAGE
                 );
             }
+    }
+
+    private static String getResource(String string) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getResource'");
     }
 
     // Função do botão de remover
